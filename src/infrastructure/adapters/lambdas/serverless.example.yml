@@ -1,0 +1,59 @@
+# Ejemplo de configuración para Serverless Framework
+# No incluido en el proyecto principal
+
+service: empresa-api-lambdas
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  stage: ${opt:stage, 'dev'}
+  
+  environment:
+    DB_HOST: ${env:DB_HOST}
+    DB_PORT: ${env:DB_PORT}
+    DB_NAME: ${env:DB_NAME}
+    DB_USER: ${env:DB_USER}
+    DB_PASSWORD: ${env:DB_PASSWORD}
+  
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - rds:*
+          Resource: "*"
+
+functions:
+  crearEmpresa:
+    handler: dist/infrastructure/adapters/lambdas/crear-empresa.lambda.handler
+    timeout: 30
+    memorySize: 512
+    events:
+      - http:
+          path: /empresas
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: false
+  
+  obtenerEmpresas:
+    handler: dist/infrastructure/adapters/lambdas/obtener-empresas.lambda.handler
+    timeout: 30
+    memorySize: 512
+    events:
+      - http:
+          path: /empresas/con-transferencias-ultimo-mes
+          method: get
+          cors: true
+
+plugins:
+  - serverless-typescript
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    httpPort: 3001
