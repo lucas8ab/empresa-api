@@ -1,14 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Empresa, TipoEmpresa } from '../../domain/entities/empresa.entity';
+import { Empresa } from '../../domain/entities/empresa.entity';
 import { Transferencia } from '../../domain/entities/transferencia.entity';
-
-export interface CrearEmpresaDto {
-  cuit: string;
-  nombre: string;
-  tipo: TipoEmpresa;
-}
+import { CrearEmpresaDto } from '../../infrastructure/controllers/dto/crear-empresa.dto';
 
 @Injectable()
 export class EmpresaService {

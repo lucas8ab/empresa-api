@@ -1,5 +1,5 @@
 import { IsString, IsEnum, IsNotEmpty, Length } from 'class-validator';
-import { TipoEmpresa } from '../../domain/entities/empresa.entity';
+import { TipoEmpresa } from '../../../domain/entities/empresa.entity';
 
 export class CrearEmpresaDto {
   @IsString()

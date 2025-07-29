@@ -1,7 +1,7 @@
 import { Injectable, Inject, ConflictException } from '@nestjs/common';
 import { EmpresaRepository } from '../../domain/repositories/empresa.repository';
 import { Empresa } from '../../domain/entities/empresa.entity';
-import { CrearEmpresaDto } from '../dtos/crear-empresa.dto';
+import { CrearEmpresaDto } from '../../infrastructure/controllers/dto/crear-empresa.dto';
 
 @Injectable()
 export class CrearEmpresaUseCase {

@@ -6,10 +6,8 @@ import {
   HttpStatus,
   HttpCode,
 } from '@nestjs/common';
-import {
-  EmpresaService,
-  CrearEmpresaDto,
-} from '../../application/services/empresa.service';
+import { EmpresaService } from '../../application/services/empresa.service';
+import { CrearEmpresaDto } from './dto/crear-empresa.dto';
 
 @Controller('empresas')
 export class EmpresaController {
