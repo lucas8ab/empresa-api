@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Empresa } from '../../domain/entities/empresa.entity';
 import { Transferencia } from '../../domain/entities/transferencia.entity';
 import { CrearEmpresaDto } from '../../infrastructure/controllers/dto/crear-empresa.dto';
+import { CrearTransferenciaDto } from '../../infrastructure/controllers/dto/crear-transferencia.dto';
 
 @Injectable()
 export class EmpresaService {
@@ -27,6 +28,12 @@ export class EmpresaService {
 
     // Crear nueva empresa
     const empresa = new Empresa(dto.cuit, dto.nombre, dto.tipo);
+
+    // Si se proporciona una fecha específica, usarla; sino usar la actual
+    if (dto.fechaAdhesion) {
+      empresa.fechaAdhesion = new Date(dto.fechaAdhesion);
+    }
+
     return await this.empresaRepository.save(empresa);
   }
 
@@ -56,8 +63,25 @@ export class EmpresaService {
   }
 
   // Método auxiliar para crear transferencias (para testing)
-  async crearTransferencia(cuitEmpresa: string): Promise<Transferencia> {
-    const transferencia = new Transferencia(cuitEmpresa);
+  async crearTransferencia(dto: CrearTransferenciaDto): Promise<Transferencia> {
+    const transferencia = new Transferencia(dto.cuitEmpresa);
+
+    // Si se proporciona una fecha específica, usarla; sino usar la actual
+    if (dto.fechaTransferencia) {
+      transferencia.fechaTransferencia = new Date(dto.fechaTransferencia);
+    }
+
     return await this.transferenciaRepository.save(transferencia);
+  }
+
+  // Método auxiliar para eliminar empresa (solo para testing)
+  async eliminarEmpresa(cuit: string): Promise<{ message: string }> {
+    const resultado = await this.empresaRepository.delete({ cuit });
+
+    if (resultado.affected === 0) {
+      throw new Error('No se encontró una empresa con ese CUIT');
+    }
+
+    return { message: `Empresa con CUIT ${cuit} eliminada exitosamente` };
   }
 }

@@ -2,12 +2,15 @@ import {
   Controller,
   Get,
   Post,
+  Delete,
+  Param,
   Body,
   HttpStatus,
   HttpCode,
 } from '@nestjs/common';
 import { EmpresaService } from '../../application/services/empresa.service';
 import { CrearEmpresaDto } from './dto/crear-empresa.dto';
+import { CrearTransferenciaDto } from './dto/crear-transferencia.dto';
 
 @Controller('empresas')
 export class EmpresaController {
@@ -31,7 +34,13 @@ export class EmpresaController {
 
   // Endpoint auxiliar para crear transferencias para testing
   @Post('transferencias')
-  async crearTransferencia(@Body() body: { cuitEmpresa: string }) {
-    return await this.empresaService.crearTransferencia(body.cuitEmpresa);
+  async crearTransferencia(@Body() dto: CrearTransferenciaDto) {
+    return await this.empresaService.crearTransferencia(dto);
+  }
+
+  // Endpoint auxiliar para eliminar empresa por CUIT (solo para testing)
+  @Delete(':cuit')
+  async eliminarEmpresa(@Param('cuit') cuit: string) {
+    return await this.empresaService.eliminarEmpresa(cuit);
   }
 }

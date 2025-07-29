@@ -1,4 +1,11 @@
-import { IsString, IsEnum, IsNotEmpty, Length } from 'class-validator';
+import {
+  IsString,
+  IsEnum,
+  IsNotEmpty,
+  Length,
+  IsOptional,
+  IsDateString,
+} from 'class-validator';
 import { TipoEmpresa } from '../../../domain/entities/empresa.entity';
 
 export class CrearEmpresaDto {
@@ -14,4 +21,13 @@ export class CrearEmpresaDto {
 
   @IsEnum(TipoEmpresa)
   tipo: TipoEmpresa;
+
+  @IsOptional()
+  @IsDateString(
+    {},
+    {
+      message: 'La fecha de adhesión debe ser una fecha válida en formato ISO',
+    },
+  )
+  fechaAdhesion?: string;
 }

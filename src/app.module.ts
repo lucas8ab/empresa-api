@@ -12,6 +12,9 @@ import { EmpresaController } from './infrastructure/controllers/empresa.controll
 // Services
 import { EmpresaService } from './application/services/empresa.service';
 
+// Seeders
+// import { DatabaseSeeder } from './infrastructure/seeders/database.seeder';
+
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeOrmConfig),
