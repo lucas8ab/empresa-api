@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Empresa } from '../../domain/entities/empresa.entity';
@@ -23,7 +27,7 @@ export class EmpresaService {
     });
 
     if (existeEmpresa) {
-      throw new Error('Ya existe una empresa con ese CUIT');
+      throw new ConflictException('Ya existe una empresa con ese CUIT');
     }
 
     // Crear nueva empresa
@@ -79,7 +83,7 @@ export class EmpresaService {
     const resultado = await this.empresaRepository.delete({ cuit });
 
     if (resultado.affected === 0) {
-      throw new Error('No se encontró una empresa con ese CUIT');
+      throw new NotFoundException('No se encontró una empresa con ese CUIT');
     }
 
     return { message: `Empresa con CUIT ${cuit} eliminada exitosamente` };
