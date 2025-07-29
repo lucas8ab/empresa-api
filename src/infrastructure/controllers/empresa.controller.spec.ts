@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, BadRequestException } from '@nestjs/common';
 import { EmpresaController } from './empresa.controller';
 import { EmpresaService } from '../../application/services/empresa.service';
 import { CrearEmpresaDto } from './dto/crear-empresa.dto';
@@ -236,11 +236,13 @@ describe('EmpresaController', () => {
       // Arrange
       const dto: CrearTransferenciaDto = {
         cuitEmpresa: '30123456700',
+        monto: 1500.0,
       };
 
       const transferenciaCreada = {
         idTransferencia: 'uuid-123',
         cuitEmpresa: '30123456700',
+        monto: 1500.0,
         fechaTransferencia: new Date(),
       };
 
@@ -261,12 +263,14 @@ describe('EmpresaController', () => {
       const fechaEspecifica = '2025-07-20T15:00:00.000Z';
       const dto: CrearTransferenciaDto = {
         cuitEmpresa: '30123456700',
+        monto: 2500.0,
         fechaTransferencia: fechaEspecifica,
       };
 
       const transferenciaCreada = {
         idTransferencia: 'uuid-456',
         cuitEmpresa: '30123456700',
+        monto: 2500.0,
         fechaTransferencia: new Date(fechaEspecifica),
       };
 
@@ -280,6 +284,27 @@ describe('EmpresaController', () => {
       // Assert
       expect(service.crearTransferencia).toHaveBeenCalledWith(dto);
       expect(resultado.fechaTransferencia).toEqual(new Date(fechaEspecifica));
+    });
+
+    it('debe lanzar BadRequestException cuando la empresa no existe', async () => {
+      // Arrange
+      const dto: CrearTransferenciaDto = {
+        cuitEmpresa: '30999888777',
+        monto: 1500.0,
+      };
+
+      mockEmpresaService.crearTransferencia.mockRejectedValue(
+        new BadRequestException('No existe empresa con el CUIT 30999888777'),
+      );
+
+      // Act & Assert
+      await expect(controller.crearTransferencia(dto)).rejects.toThrow(
+        BadRequestException,
+      );
+      await expect(controller.crearTransferencia(dto)).rejects.toThrow(
+        'No existe empresa con el CUIT 30999888777',
+      );
+      expect(service.crearTransferencia).toHaveBeenCalledWith(dto);
     });
   });
 });

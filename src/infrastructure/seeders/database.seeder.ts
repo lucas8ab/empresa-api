@@ -59,7 +59,7 @@ export class DatabaseSeeder implements OnModuleInit {
     // await this.empresaRepository.save(empresaCorp);
 
     // Crear transferencias del último mes
-    // const transferencia3 = new Transferencia('20222222222');
+    // const transferencia3 = new Transferencia('20222222222', 1000.0);
     // transferencia3.fechaTransferencia = new Date();
     // transferencia3.fechaTransferencia.setDate(
     //   transferencia3.fechaTransferencia.getDate() - 3,
@@ -67,7 +67,7 @@ export class DatabaseSeeder implements OnModuleInit {
     // await this.transferenciaRepository.save(transferencia3);
 
     // Transferencia antigua (no debería aparecer)
-    const transferenciaAntigua = new Transferencia('30112224440');
+    const transferenciaAntigua = new Transferencia('30112224440', 500.0);
     transferenciaAntigua.fechaTransferencia = new Date();
     transferenciaAntigua.fechaTransferencia.setMonth(
       transferenciaAntigua.fechaTransferencia.getMonth() - 2,

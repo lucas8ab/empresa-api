@@ -5,12 +5,14 @@ describe('Transferencia Entity', () => {
     it('debe crear una transferencia con datos válidos', () => {
       // Arrange
       const cuitEmpresa = '30123456700';
+      const monto = 1500.5;
 
       // Act
-      const transferencia = new Transferencia(cuitEmpresa);
+      const transferencia = new Transferencia(cuitEmpresa, monto);
 
       // Assert
       expect(transferencia.cuitEmpresa).toBe(cuitEmpresa);
+      expect(transferencia.monto).toBe(monto);
       expect(transferencia.fechaTransferencia).toBeInstanceOf(Date);
       expect(transferencia.idTransferencia).toBeDefined();
     });
@@ -20,7 +22,7 @@ describe('Transferencia Entity', () => {
       const fechaAntes = new Date();
 
       // Act
-      const transferencia = new Transferencia('30123456700');
+      const transferencia = new Transferencia('30123456700', 1000.0);
 
       const fechaDespues = new Date();
 
@@ -36,8 +38,8 @@ describe('Transferencia Entity', () => {
 
     it('debe generar ID único para cada transferencia', () => {
       // Act
-      const transferencia1 = new Transferencia('30123456700');
-      const transferencia2 = new Transferencia('30987654321');
+      const transferencia1 = new Transferencia('30123456700', 500.0);
+      const transferencia2 = new Transferencia('30987654321', 750.0);
 
       // Assert
       expect(transferencia1.idTransferencia).toBeDefined();
@@ -51,7 +53,7 @@ describe('Transferencia Entity', () => {
   describe('Casos border de fechas para transferencias', () => {
     it('debe poder modificar fecha de transferencia para casos de prueba', () => {
       // Arrange
-      const transferencia = new Transferencia('30123456700');
+      const transferencia = new Transferencia('30123456700', 1000.0);
       const nuevaFecha = new Date('2025-07-20T15:00:00.000Z');
 
       // Act
@@ -63,7 +65,7 @@ describe('Transferencia Entity', () => {
 
     it('debe mantener la fecha asignada manualmente', () => {
       // Arrange
-      const transferencia = new Transferencia('30123456700');
+      const transferencia = new Transferencia('30123456700', 1000.0);
       const fechaManual = new Date('2025-06-15T12:30:00.000Z');
 
       // Act
@@ -77,7 +79,7 @@ describe('Transferencia Entity', () => {
 
     it('debe soportar fechas de transferencia en el pasado para testing', () => {
       // Arrange
-      const transferencia = new Transferencia('30123456700');
+      const transferencia = new Transferencia('30123456700', 1000.0);
       const fechaPasada = new Date(Date.now() - 45 * 24 * 60 * 60 * 1000); // 45 días atrás
 
       // Act
@@ -92,7 +94,7 @@ describe('Transferencia Entity', () => {
 
     it('debe soportar fechas de transferencia exactamente 29 días atrás', () => {
       // Arrange
-      const transferencia = new Transferencia('30123456700');
+      const transferencia = new Transferencia('30123456700', 1000.0);
       const fecha29DiasAtras = new Date(Date.now() - 29 * 24 * 60 * 60 * 1000);
 
       // Act
@@ -110,7 +112,7 @@ describe('Transferencia Entity', () => {
 
     it('debe soportar fechas de transferencia exactamente 30 días atrás', () => {
       // Arrange
-      const transferencia = new Transferencia('30123456700');
+      const transferencia = new Transferencia('30123456700', 1000.0);
       const fecha30DiasAtras = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
       // Act
@@ -128,7 +130,7 @@ describe('Transferencia Entity', () => {
 
     it('debe soportar fechas de transferencia de más de 31 días atrás (fuera de rango)', () => {
       // Arrange
-      const transferencia = new Transferencia('30123456700');
+      const transferencia = new Transferencia('30123456700', 1000.0);
       const fecha35DiasAtras = new Date(Date.now() - 35 * 24 * 60 * 60 * 1000);
 
       // Act
@@ -146,7 +148,7 @@ describe('Transferencia Entity', () => {
 
     it('debe soportar fechas de transferencia recientes (dentro de 7 días)', () => {
       // Arrange
-      const transferencia = new Transferencia('30123456700');
+      const transferencia = new Transferencia('30123456700', 1000.0);
       const fecha5DiasAtras = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
 
       // Act
@@ -164,7 +166,7 @@ describe('Transferencia Entity', () => {
 
     it('debe soportar fechas de transferencia de hoy', () => {
       // Arrange
-      const transferencia = new Transferencia('30123456700');
+      const transferencia = new Transferencia('30123456700', 1000.0);
       const hoy = new Date();
       hoy.setHours(0, 0, 0, 0); // Inicio del día
 
@@ -188,7 +190,7 @@ describe('Transferencia Entity', () => {
       const cuitValido = '30123456700';
 
       // Act
-      const transferencia = new Transferencia(cuitValido);
+      const transferencia = new Transferencia(cuitValido, 800.0);
 
       // Assert
       expect(transferencia.cuitEmpresa).toBe(cuitValido);
@@ -201,9 +203,22 @@ describe('Transferencia Entity', () => {
 
       // Act & Assert
       cuits.forEach((cuit) => {
-        const transferencia = new Transferencia(cuit);
+        const transferencia = new Transferencia(cuit, 950.25);
         expect(transferencia.cuitEmpresa).toBe(cuit);
         expect(transferencia.cuitEmpresa.length).toBe(11);
+      });
+    });
+
+    it('debe manejar diferentes montos válidos', () => {
+      // Arrange
+      const cuit = '30123456700';
+      const montos = [100, 1500.5, 999999.99, 0.01];
+
+      // Act & Assert
+      montos.forEach((monto) => {
+        const transferencia = new Transferencia(cuit, monto);
+        expect(transferencia.monto).toBe(monto);
+        expect(typeof transferencia.monto).toBe('number');
       });
     });
   });
@@ -214,7 +229,7 @@ describe('Transferencia Entity', () => {
       const cuitEmpresa = '30555666777';
 
       // Act
-      const transferencia = new Transferencia(cuitEmpresa);
+      const transferencia = new Transferencia(cuitEmpresa, 1200.0);
 
       // Assert
       expect(transferencia.cuitEmpresa).toBe(cuitEmpresa);
@@ -225,8 +240,8 @@ describe('Transferencia Entity', () => {
       const cuitEmpresa = '30123456700';
 
       // Act
-      const transferencia1 = new Transferencia(cuitEmpresa);
-      const transferencia2 = new Transferencia(cuitEmpresa);
+      const transferencia1 = new Transferencia(cuitEmpresa, 500.0);
+      const transferencia2 = new Transferencia(cuitEmpresa, 1500.0);
 
       // Assert
       expect(transferencia1.cuitEmpresa).toBe(cuitEmpresa);

@@ -2,6 +2,7 @@ import {
   Injectable,
   ConflictException,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -68,7 +69,18 @@ export class EmpresaService {
 
   // Método auxiliar para crear transferencias (para testing)
   async crearTransferencia(dto: CrearTransferenciaDto): Promise<Transferencia> {
-    const transferencia = new Transferencia(dto.cuitEmpresa);
+    // Verificar que la empresa existe
+    const empresaExiste = await this.empresaRepository.findOne({
+      where: { cuit: dto.cuitEmpresa },
+    });
+
+    if (!empresaExiste) {
+      throw new BadRequestException(
+        `No existe empresa con el CUIT ${dto.cuitEmpresa}`,
+      );
+    }
+
+    const transferencia = new Transferencia(dto.cuitEmpresa, dto.monto);
 
     // Si se proporciona una fecha específica, usarla; sino usar la actual
     if (dto.fechaTransferencia) {

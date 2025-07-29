@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, BadRequestException } from '@nestjs/common';
 import { EmpresaService } from './empresa.service';
 import { Empresa, TipoEmpresa } from '../../domain/entities/empresa.entity';
 import { Transferencia } from '../../domain/entities/transferencia.entity';
@@ -407,15 +407,29 @@ describe('EmpresaService', () => {
       // Arrange
       const dto: CrearTransferenciaDto = {
         cuitEmpresa: '30123456700',
+        monto: 1500.75,
       };
 
-      const transferenciaGuardada = new Transferencia(dto.cuitEmpresa);
+      const empresaExistente = new Empresa(
+        dto.cuitEmpresa,
+        'Empresa Test',
+        TipoEmpresa.PYME,
+      );
+      mockEmpresaRepository.findOne.mockResolvedValue(empresaExistente);
+
+      const transferenciaGuardada = new Transferencia(
+        dto.cuitEmpresa,
+        dto.monto,
+      );
       mockTransferenciaRepository.save.mockResolvedValue(transferenciaGuardada);
 
       // Act
       const resultado = await service.crearTransferencia(dto);
 
       // Assert
+      expect(empresaRepository.findOne).toHaveBeenCalledWith({
+        where: { cuit: dto.cuitEmpresa },
+      });
       expect(transferenciaRepository.save).toHaveBeenCalled();
       expect(resultado.cuitEmpresa).toBe(dto.cuitEmpresa);
     });
@@ -425,10 +439,21 @@ describe('EmpresaService', () => {
       const fechaEspecifica = '2025-07-20T15:00:00.000Z';
       const dto: CrearTransferenciaDto = {
         cuitEmpresa: '30123456700',
+        monto: 2000.0,
         fechaTransferencia: fechaEspecifica,
       };
 
-      const transferenciaGuardada = new Transferencia(dto.cuitEmpresa);
+      const empresaExistente = new Empresa(
+        dto.cuitEmpresa,
+        'Empresa Test',
+        TipoEmpresa.PYME,
+      );
+      mockEmpresaRepository.findOne.mockResolvedValue(empresaExistente);
+
+      const transferenciaGuardada = new Transferencia(
+        dto.cuitEmpresa,
+        dto.monto,
+      );
       transferenciaGuardada.fechaTransferencia = new Date(fechaEspecifica);
       mockTransferenciaRepository.save.mockResolvedValue(transferenciaGuardada);
 
@@ -436,8 +461,34 @@ describe('EmpresaService', () => {
       const resultado = await service.crearTransferencia(dto);
 
       // Assert
+      expect(empresaRepository.findOne).toHaveBeenCalledWith({
+        where: { cuit: dto.cuitEmpresa },
+      });
       expect(transferenciaRepository.save).toHaveBeenCalled();
       expect(resultado.fechaTransferencia).toEqual(new Date(fechaEspecifica));
+    });
+
+    it('debe lanzar BadRequestException cuando la empresa no existe', async () => {
+      // Arrange
+      const dto: CrearTransferenciaDto = {
+        cuitEmpresa: '30999888777',
+        monto: 1000.0,
+      };
+
+      mockEmpresaRepository.findOne.mockResolvedValue(null);
+
+      // Act & Assert
+      await expect(service.crearTransferencia(dto)).rejects.toThrow(
+        BadRequestException,
+      );
+      await expect(service.crearTransferencia(dto)).rejects.toThrow(
+        'No existe empresa con el CUIT 30999888777',
+      );
+
+      expect(empresaRepository.findOne).toHaveBeenCalledWith({
+        where: { cuit: dto.cuitEmpresa },
+      });
+      expect(transferenciaRepository.save).not.toHaveBeenCalled();
     });
   });
 });
