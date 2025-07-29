@@ -33,10 +33,17 @@ export class Empresa {
   @OneToMany(() => Transferencia, (transferencia) => transferencia.empresa)
   transferencias: Transferencia[];
 
-  constructor(cuit: string, nombre: string, tipo: TipoEmpresa) {
+  constructor(
+    cuit: string,
+    nombre: string,
+    tipo: TipoEmpresa,
+    fechaAdhesion?: Date,
+  ) {
     this.cuit = cuit;
     this.nombre = nombre;
     this.tipo = tipo;
+    this.fechaAdhesion = fechaAdhesion || new Date();
+    this.transferencias = [];
   }
 
   // Métodos de dominio

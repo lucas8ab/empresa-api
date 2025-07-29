@@ -1,98 +1,258 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Empresa API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API REST desarrollada con NestJS para la gestión de empresas y transferencias, implementando arquitectura hexagonal.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Endpoints Disponibles
 
-## Description
+### 1. Registrar Nueva Empresa
+```http
+POST /empresas
+Content-Type: application/json
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
-```bash
-$ npm install
+{
+  "cuit": "30123456789",
+  "nombre": "Mi Empresa SRL",
+  "tipo": "PYME",
+  "fechaAdhesion": "2025-01-15T10:00:00Z" // Opcional
+}
 ```
 
-## Compile and run the project
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+**Respuesta (201 Created):**
+```json
+{
+  "cuit": "30123456789",
+  "nombre": "Mi Empresa SRL",
+  "tipo": "PYME",
+  "fechaAdhesion": "2025-01-15T10:00:00.000Z"
+}
 ```
 
-## Run tests
+**Tipos de empresa válidos:** `PYME`, `CORPORATIVA`
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+### 2. Obtener Empresas con Transferencias (Último Mes)
+```http
+GET /empresas/con-transferencias-ultimo-mes
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+**Respuesta (200 OK):**
+```json
+[
+  {
+    "cuit": "30123456789",
+    "nombre": "Mi Empresa SRL",
+    "tipo": "PYME",
+    "fechaAdhesion": "2025-01-15T10:00:00.000Z"
+  }
+]
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 3. Obtener Empresas Adheridas (Último Mes)
+```http
+GET /empresas/adheridas-ultimo-mes
+```
 
-## Resources
+**Respuesta (200 OK):**
+```json
+[
+  {
+    "cuit": "30987654321",
+    "nombre": "Nueva Empresa SA",
+    "tipo": "CORPORATIVA",
+    "fechaAdhesion": "2025-07-15T14:30:00.000Z"
+  }
+]
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+## Instrucciones de Instalación
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Prerequisitos
+- **Node.js** v18+ 
+- **npm** v8+
 
-## Support
+### Pasos de Instalación
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+1. **Clonar el repositorio:**
+```bash
+git clone <repository-url>
+cd empresa-api
+```
 
-## Stay in touch
+2. **Instalar dependencias:**
+```bash
+npm install
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+3. **Ejecutar en modo desarrollo:**
+```bash
+npm run start:dev
+```
 
-## License
+4. **La API estará disponible en:**
+```
+http://localhost:3000
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Base de Datos
+- **SQLite** embebida (archivo `empresa.db`)
+- Se crea automáticamente al iniciar la aplicación
+- No requiere configuración adicional
+
+## Cómo Probar los Endpoints
+
+### Usando cURL
+
+**1. Crear una empresa:**
+```bash
+curl -X POST http://localhost:3000/empresas \
+  -H "Content-Type: application/json" \
+  -d '{
+    "cuit": "30123456789",
+    "nombre": "Test Empresa",
+    "tipo": "PYME"
+  }'
+```
+
+**2. Crear empresa con fecha antigua:**
+```bash
+curl -X POST http://localhost:3000/empresas \
+  -H "Content-Type: application/json" \
+  -d '{
+    "cuit": "30987654321",
+    "nombre": "Empresa Antigua",
+    "tipo": "CORPORATIVA",
+    "fechaAdhesion": "2024-05-15T09:00:00Z"
+  }'
+```
+
+**3. Crear transferencia:**
+```bash
+curl -X POST http://localhost:3000/empresas/transferencias \
+  -H "Content-Type: application/json" \
+  -d '{
+    "cuitEmpresa": "30123456789",
+    "fechaTransferencia": "2025-07-20T15:00:00Z"
+  }'
+```
+
+**4. Obtener empresas con transferencias:**
+```bash
+curl http://localhost:3000/empresas/con-transferencias-ultimo-mes
+```
+
+**5. Obtener empresas adheridas:**
+```bash
+curl http://localhost:3000/empresas/adheridas-ultimo-mes
+```
+
+## Estructura del Proyecto
+
+```
+src/
+├── application/              # Capa de Aplicación
+│   ├── services/            # Servicios de aplicación
+│   └── use-cases/           # Casos de uso específicos
+├── domain/                  # Capa de Dominio  
+│   ├── entities/            # Entidades del negocio
+│   └── repositories/        # Interfaces (puertos)
+├── infrastructure/          # Capa de Infraestructura
+│   ├── adapters/            # Adaptadores externos
+│   │   └── lambdas/         # AWS Lambda (teórico)
+│   ├── controllers/         # Controladores HTTP (adaptadores entrada)
+│   │   └── dto/             # DTOs de entrada
+│   ├── persistence/         # Repositorios TypeORM (adaptadores salida)
+│   └── seeders/             # Datos de prueba
+├── config/                  # Configuraciones
+└── main.ts                  # Punto de entrada
+```
+
+## Explicación de Decisiones Arquitecturales
+
+### 🏗️ **Arquitectura Hexagonal (Ports and Adapters)**
+
+**¿Por qué Hexagonal?**
+- **Separación clara** entre lógica de negocio e infraestructura
+- **Testabilidad** alta al poder mockear adaptadores
+- **Flexibilidad** para cambiar implementaciones sin afectar el core
+- **Cumple requerimientos** del challenge (deseable)
+
+**Capas implementadas:**
+- **Domain:** Entidades y reglas de negocio puras
+- **Application:** Casos de uso y servicios de aplicación  
+- **Infrastructure:** Adaptadores para HTTP, base de datos, etc.
+
+### 🗄️ **Base de Datos: SQLite**
+
+**¿Por qué SQLite?**
+- **Embebida:** No requiere servidor separado
+- **Zero configuration:** Ideal para desarrollo y testing
+- **Cumple requerimientos:** "instancia embebida"
+- **Portable:** Un solo archivo `empresa.db`
+- **SQL completo:** Permite queries relacionales complejas
+
+### 🔧 **Tecnologías Elegidas**
+
+**NestJS:**
+- Framework enterprise-grade para Node.js
+- Decoradores y DI container built-in
+- Excelente para APIs REST estructuradas
+- TypeScript first
+
+**TypeORM:**
+- ORM maduro compatible con múltiples DB
+- Repository pattern que encaja con Hexagonal
+- Migrations y sincronización automática
+
+**Class Validator:**
+- Validaciones declarativas con decoradores
+- Mensajes de error personalizables
+- Integración nativa con NestJS
+
+### 📁 **Estructura de Carpetas**
+
+**Por capas de arquitectura:**
+- Cada capa tiene responsabilidades específicas
+- Dependencies fluyen hacia el dominio
+- Fácil testing y mantenimiento
+
+**DTOs separados por contexto:**
+- Controllers: DTOs de entrada HTTP
+- Application: DTOs internos si fuera necesario
+
+### 🚀 **Decisiones de Implementación**
+
+**Validaciones:**
+- CUIT exactamente 11 caracteres (sin guiones)
+- Enum para tipos de empresa (PYME/CORPORATIVA)
+- Fechas opcionales en formato ISO
+
+**Manejo de Errores:**
+- HTTP status codes semánticamente correctos
+- 409 Conflict para recursos duplicados
+- 400 Bad Request para validaciones
+- 404 Not Found para recursos inexistentes
+
+**Fechas:**
+- Opcional en entrada (si no se provee, usa timestamp actual)
+- Formato ISO 8601 estándar
+- UTC para evitar problemas de timezone
+
+## Scripts Disponibles
+
+```bash
+# Desarrollo
+npm run start:dev    # Inicia con hot reload
+
+# Producción  
+npm run build        # Compila TypeScript
+
+# Testing
+npm run test         # Tests unitarios
+
+# Calidad de código
+npm run lint         # ESLint
+npm run format       # Prettier
+```
+
+## Licencia
+
+Este proyecto está bajo la licencia MIT [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
