@@ -53,14 +53,14 @@ const initializeDataSource = async (): Promise<DataSource> => {
 /**
  * Input JSON esperado:
  * {
- *   "cuit": "30-99222333-0",
+ *   "cuit": "30992223330",
  *   "nombre": "Colchoneria Jose",
  *   "tipo": "PYME"
  * }
  *
  * Output JSON esperado:
  * {
- *   "cuit": "30-99222333-0",
+ *   "cuit": "30992223330",
  *   "nombre": "Colchoneria Jose",
  *   "tipo": "PYME",
  *   "fechaAdhesion": "2025-07-29T04:53:25.000Z"

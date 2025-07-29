@@ -43,7 +43,6 @@ export class Empresa {
     this.nombre = nombre;
     this.tipo = tipo;
     this.fechaAdhesion = fechaAdhesion || new Date();
-    this.transferencias = [];
   }
 
   // Métodos de dominio

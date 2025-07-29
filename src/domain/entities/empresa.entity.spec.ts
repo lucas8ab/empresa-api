@@ -16,7 +16,6 @@ describe('Empresa Entity', () => {
       expect(empresa.nombre).toBe(nombre);
       expect(empresa.tipo).toBe(TipoEmpresa.PYME);
       expect(empresa.fechaAdhesion).toBeInstanceOf(Date);
-      expect(empresa.transferencias).toEqual([]);
     });
 
     it('debe crear una empresa CORPORATIVA con datos válidos', () => {
@@ -33,7 +32,6 @@ describe('Empresa Entity', () => {
       expect(empresa.nombre).toBe(nombre);
       expect(empresa.tipo).toBe(TipoEmpresa.CORPORATIVA);
       expect(empresa.fechaAdhesion).toBeInstanceOf(Date);
-      expect(empresa.transferencias).toEqual([]);
     });
 
     it('debe asignar fecha de adhesión automáticamente al crear', () => {
@@ -57,19 +55,6 @@ describe('Empresa Entity', () => {
       expect(empresa.fechaAdhesion.getTime()).toBeLessThanOrEqual(
         fechaDespues.getTime(),
       );
-    });
-
-    it('debe inicializar array de transferencias vacío', () => {
-      // Act
-      const empresa = new Empresa(
-        '30123456700',
-        'Test Empresa',
-        TipoEmpresa.PYME,
-      );
-
-      // Assert
-      expect(empresa.transferencias).toEqual([]);
-      expect(Array.isArray(empresa.transferencias)).toBe(true);
     });
   });
 
