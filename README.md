@@ -255,4 +255,4 @@ npm run format       # Prettier
 
 ## Licencia
 
-Este proyecto está bajo la licencia MIT [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Este proyecto está bajo la licencia [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
